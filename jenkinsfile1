@@ -23,11 +23,7 @@ pipeline {
             cron('H 4 * * 1-5') // Schedule: every weekday at 4 AM
         }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/krishanmishra/TestART_2024.git', credentialsId: 'kkmjssate@gmail.com'
-            }
-        }
+       
         stage('Build') {
             steps {
                 withMaven(maven: 'Maven3', mavenSettingsConfig: 'your-maven-settings-id') {
