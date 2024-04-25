@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+    parameters{
+        choice(name: 'ENVIRONMENT', choices:['QA','INT','DEMO'], description: 'select the deployment environment')
+        choice(name: 'PLATFORM', choices:['WINDOW','MAC','LINUX'], description: 'select the platform')
+        choice(name: 'BROWSER', choices:['FireFox','EDGE','CHROME'], description: 'select the browser for running')
+        string(name: 'USERNAME',description: 'Enter your username', defaultValue: 'TestIP2@test.com')
+        password(name: 'USERPASS',description: 'Enter the User Password',defaultValue: 'Password@123')
+       extendedChoice(
+            name: 'TEST_TYPE',
+            type: 'PT_SINGLE_SELECT',
+            choices: 'ART-2030,Smoke,Regression,Performance',           
+            defaultValue: 'ART-2030',
+            description: 'Please select Tests you want to run',
+            visibleItemCount: 3,
+            multiSelectDelimiter: ',',
+            quoteValue: false,
+        )
+         string(name: 'RecGroup',description: 'Enter Rec Group', defaultValue: 'India')
+         string(name: 'RecPeriod',description: 'Enter Rec Period', defaultValue: '05/28/2023')
+    }
+     triggers {
+            cron('H 4 * * 1-5') // Schedule: every weekday at 4 AM
+        }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/krishanmishra/TestART_2024.git', credentialsId: 'kkmjssate@gmail.com'
+            }
+        }
+        stage('Build') {
+            steps {
+                withMaven(maven: 'Maven3', mavenSettingsConfig: 'your-maven-settings-id') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    if (params.TEST_TYPE == 'Smoke') {
+                        sh 'mvn test -Dtest=SmokeTests'
+                    } else if (params.TEST_TYPE == 'Regression') {
+                        sh 'mvn test -Dtest=RegressionTests'
+                    } else if (params.TEST_TYPE == 'Performance') {
+                        sh 'mvn test -Dtest=PerformanceTests'
+                    }else if (params.TEST_TYPE == 'ART-2030') {
+                        sh 'mvn test -Dtest=ART-2030'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts 'target/*.jar'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}

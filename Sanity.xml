@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="LoginTest_Suite">
+  <test thread-count="5" name="Login_Test">
+    <classes>
+      <class name="com.art.qa.LoginTest.LoginTest"/>      
+    </classes>
+  </test> <!-- Test -->
+  
+  <test thread-count="5" name="CreateERecBinder_Test">
+    <classes>
+      <class name="com.art.qa.AccountViewer.CreateERecBinder"/>      
+    </classes>
+  </test> <!-- Test -->
+  
+</suite> <!-- Suite -->

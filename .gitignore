@@ -1,0 +1,72 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+# Log files
+*.log
+
+# Maven target directory
+/target/
+
+# IntelliJ IDEA project files
+/.idea/
+/*.iml
+
+# Eclipse project files
+/.classpath
+/.project
+/.settings/
+# Local environment configurations
+*.env
+.env
+*.local
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Compiled Java classes
+*.class
+
+# Dependency files
+*.jar
+*.war
+*.ear
+
+# Test results and reports
+/surefire-reports/
+/test-output/
+
+# Selenium-specific files
+/selenium-screenshots/
+/selenium-videos/
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store

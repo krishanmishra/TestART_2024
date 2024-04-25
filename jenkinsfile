@@ -1,0 +1,87 @@
+pipeline {
+    
+    agent any
+    parameters{
+        choice(name: 'ENVIRONMENT', choices:['QA','INT','DEMO'], description: 'select the deployment environment')
+        choice(name: 'PLATFORM', choices:['WINDOW','MAC','LINUX'], description: 'select the platform')
+        choice(name: 'BROWSER', choices:['FireFox','EDGE','CHROME'], description: 'select the browser for running')
+        string(name: 'USERNAME',description: 'Enter your username', defaultValue: 'TestIP2@test.com')
+        password(name: 'USERPASS',description: 'Enter the User Password',defaultValue: 'Password@123')
+       extendedChoice(
+            name: 'TestCases',
+            type: 'PT_SINGLE_SELECT',
+            value: 'ART-2030,Test2,Test3,Test4,Test5,Test6',
+            defaultValue: 'ART-2030',
+            description: 'Please select Tests you want to run',
+            visibleItemCount: 3,
+            multiSelectDelimiter: ',',
+            quoteValue: false,
+        )
+         string(name: 'RecGroup',description: 'Enter Rec Group', defaultValue: 'India')
+         string(name: 'RecPeriod',description: 'Enter Rec Period', defaultValue: '05/28/2023')
+    }
+     triggers {
+            cron('H 4 * * 1-5') // Schedule: every weekday at 4 AM
+        }
+
+    stages {
+    
+    stage('Clone Repository') {
+      steps {
+        git 'https://git-codecommit.us-east-1.amazonaws.com/v1/repos/ARTTest/Automation'
+      }
+    }
+    
+       stage('testing') {
+            steps {
+                echo "Tests will run ----${params.TestCases}"
+            }
+        }
+        stage('Build') {
+            steps {
+                script{
+                 echo "Tests will run ----${params.TestCases}"
+                echo "Creating Build for ${params.ENVIRONMENT} on ${params.PLATFORM} platform"
+                echo "Username: ${params.USERNAME}"
+                 echo "Selected environment: ${params.ENVIRONMENT}"
+                 echo "User password: ${params.USERPASS}"
+                
+                 echo "RecGroup: ${params.RecGroup}"
+                 echo "RecPeriod: ${params.RecPeriod}"
+                sleep time:10, unit: 'SECONDS'
+            }
+        }
+        }
+        stage('Run Automation') {
+            steps {
+                echo "Running automation on ${params.BROWSER} browser"
+                sleep time:10, unit: 'SECONDS'
+            }
+        }
+            
+       stage('Deploy') {
+            steps {
+                echo "Deploying on ${params.ENVIRONMENT} server"
+                sleep time:10, unit: 'SECONDS'
+            }
+        }
+    }
+    
+    post{
+        success{
+            echo "Pipeline completed successfully"
+        }
+        failure{
+            echo "Pipeline failed"
+        }
+ //      always {
+ // Your post-build actions go here
+ //emailtext(
+ //subject: 'Build Status - ${currentBuild.currentResult}',
+ //body: 'The build status is: ${currentBuild.currentResult}',
+ //to: 'your-email@example.com',
+ //attachLog: true
+ //)
+ }
+}
+
